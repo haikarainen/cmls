@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Seamless.Framework", "Seaml
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Seamless.IISModule", "Seamless.IISModule\Seamless.IISModule.vcxproj", "{C7F36A63-63A2-4B2F-B734-D8B8A4C2261D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Seamless.TestBed", "Seamless.TestBed\Seamless.TestBed.vcxproj", "{91B1984D-E4EA-4FB2-A775-D25287B2911D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Seamless.Blog", "Seamless.Blog\Seamless.Blog.vcxproj", "{64F5561D-4F4E-4650-9E12-06F768E9E146}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +25,14 @@ Global
 		{C7F36A63-63A2-4B2F-B734-D8B8A4C2261D}.Debug|x64.Build.0 = Debug|x64
 		{C7F36A63-63A2-4B2F-B734-D8B8A4C2261D}.Release|x64.ActiveCfg = Release|x64
 		{C7F36A63-63A2-4B2F-B734-D8B8A4C2261D}.Release|x64.Build.0 = Release|x64
+		{91B1984D-E4EA-4FB2-A775-D25287B2911D}.Debug|x64.ActiveCfg = Debug|x64
+		{91B1984D-E4EA-4FB2-A775-D25287B2911D}.Debug|x64.Build.0 = Debug|x64
+		{91B1984D-E4EA-4FB2-A775-D25287B2911D}.Release|x64.ActiveCfg = Release|x64
+		{91B1984D-E4EA-4FB2-A775-D25287B2911D}.Release|x64.Build.0 = Release|x64
+		{64F5561D-4F4E-4650-9E12-06F768E9E146}.Debug|x64.ActiveCfg = Debug|x64
+		{64F5561D-4F4E-4650-9E12-06F768E9E146}.Debug|x64.Build.0 = Debug|x64
+		{64F5561D-4F4E-4650-9E12-06F768E9E146}.Release|x64.ActiveCfg = Release|x64
+		{64F5561D-4F4E-4650-9E12-06F768E9E146}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
