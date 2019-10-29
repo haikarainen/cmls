@@ -389,3 +389,5 @@ MigrationBackup/
 
 # Custom
 Deploy.bat
+Seamless.TestBed/
+Seamless.Deploy/
