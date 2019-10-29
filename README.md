@@ -15,6 +15,7 @@ Seamless (CMLS) is a brand-spanking new experimental web framework. It includes:
 * Native server plugins for IIS on Windows, and Apache or Nginx on Linux.
 * A C++ compiler frontend that supports MSBuild on Windows, and GCC or clang on Linux.
 * An easy-to-use ORM with support for multiple database backends.
+* ***(NEW)*** Plans to implement complementary and integrated JS framework for Single-Page Applications and similiar uses.
 
 \* *During production, it is recommended that on-demand recompilation is turned off. Not only does this further increase performance, it's also prevents a huge security issue. Turning it off additionally allows you to skip the installation of build tools on the production server.*
 
