@@ -73,6 +73,10 @@ namespace cmls
 
   CMLS_API bool patternMatch(std::string const &source, std::string const &pattern, std::map<std::string, std::string> &namedParameters);
 
+  CMLS_API std::string utf16to8(std::wstring const &wstr);
+
+  CMLS_API std::wstring utf8to16(std::string const &str);
+
   enum PatternTokenType
   {
     PT_Literal,
@@ -90,7 +94,7 @@ namespace cmls
 
   class Pattern;
 
-  class PatternResult
+  class CMLS_API PatternResult
   {
   public:
     PatternResult(cmls::Pattern const &pattern, std::string const &reference);
@@ -107,12 +111,12 @@ namespace cmls
     PatternVariableSet m_variables;
   };
 
-  class Pattern
+  class CMLS_API Pattern
   {
   public:
     Pattern(std::string const &pattern);
 
-    PatternResult evaluate(std::string const &reference);
+    PatternResult evaluate(std::string const &reference) const;
     PatternTokenList const &tokens() const;
 
     bool valid() const;

@@ -92,6 +92,7 @@
     <ClInclude Include="include\Seamless\CppCompiler\CppCompiler.hpp" />
     <ClInclude Include="include\Seamless\CppCompiler\CppCompiler_MSBuild.hpp" />
     <ClInclude Include="include\Seamless\CppCompiler\ICppCompiler.hpp" />
+    <ClInclude Include="include\Seamless\Http.hpp" />
     <ClInclude Include="include\Seamless\TemplateCompiler\Chunks\CodeLiteralChunk.hpp" />
     <ClInclude Include="include\Seamless\TemplateCompiler\Chunks\CompilationChunk.hpp" />
     <ClInclude Include="include\Seamless\TemplateCompiler\TemplateCompiler.hpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="include\Seamless\View\ViewParameter.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Seamless\Application\Controller.cpp" />
     <ClCompile Include="include\Seamless\CppCompiler\ICppCompiler.cpp" />
     <ClCompile Include="src\Seamless\Application.cpp" />
     <ClCompile Include="src\Seamless\Application\ConfigurationManager.cpp" />
@@ -128,6 +130,7 @@
     <ClCompile Include="src\Seamless\Application\ViewManager.cpp" />
     <ClCompile Include="src\Seamless\Async.cpp" />
     <ClCompile Include="src\Seamless\CppCompiler\CppCompiler_MSBuild.cpp" />
+    <ClCompile Include="src\Seamless\Http.cpp" />
     <ClCompile Include="src\Seamless\TemplateCompiler\Chunks\CodeLiteralChunk.cpp" />
     <ClCompile Include="src\Seamless\TemplateCompiler\Chunks\CompilationChunk.cpp" />
     <ClCompile Include="src\Seamless\TemplateCompiler\TemplateCompiler.cpp" />

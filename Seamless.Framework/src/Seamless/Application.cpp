@@ -3,6 +3,9 @@
 
 #include "Seamless/Filesystem.hpp"
 #include "Seamless/Error.hpp"
+#include "Seamless/Http.hpp"
+#include "Seamless/Application/Controller.hpp"
+#include "Seamless/Stream.hpp"
 
 cmls::Application::Application(std::string const& root, std::string const &site)
 {
@@ -11,16 +14,32 @@ cmls::Application::Application(std::string const& root, std::string const &site)
   m_root = cmls::Directory(root).fullPath();
   m_site = site;
   m_viewManager = new cmls::ViewManager(this);
+  m_configurationManager = new cmls::ConfigurationManager(this);
 }
 
 cmls::Application::~Application()
 {
+  for (auto c : m_controllers)
+  {
+    delete c.second;
+  }
+
   delete m_viewManager;
+  if (m_logHandle)
+  {
+    m_logHandle.close();
+  }
+
   cmls::Log::unregisterHandler(this);
 }
 
 bool cmls::Application::initialize()
 {
+  if (!m_configurationManager->resolve())
+  {
+    LogError("Failed to resolve configuration");
+    return false;
+  }
   return true;
 }
 
@@ -54,11 +73,47 @@ void cmls::Application::writeLine(std::string const& line)
   }
 
   m_logHandle.write(linen.c_str(), linen.size());
+  m_logHandle.flush();
 }
 
 std::string const& cmls::Application::log() const
 {
   return m_log;
+}
+
+void cmls::Application::route(cmls::HttpMethod method, std::string const& patternText, cmls::Controller* controller)
+{
+  m_routes.push_back({patternText, method, controller});
+}
+
+cmls::Controller* cmls::Application::controller(std::string const& classId)
+{
+  auto finder = m_controllers.find(classId);
+  if (finder == m_controllers.end())
+  {
+    return nullptr;
+  }
+
+  return finder->second;
+}
+
+void cmls::Application::controller(std::string const& classId, cmls::Controller* controllerInstance)
+{
+  auto finder = m_controllers.find(classId);
+  if (finder != m_controllers.end())
+  {
+    return;
+  }
+
+  m_controllers[classId] = controllerInstance;
+}
+
+void cmls::Application::staticRoute(std::vector<std::string> const& exts, std::string const& mimeType)
+{
+  for (auto e : exts)
+  {
+    m_staticServes[e] = mimeType;
+  }
 }
 
 bool cmls::Application::loadConfiguration()
@@ -89,6 +144,75 @@ std::string const& cmls::Application::root() const
 
 bool cmls::Application::handleRequest(cmls::Request const &request, cmls::Response &response)
 {
-  // @todo, route and invoke controllers
+  // First attempt to find a route
+  for (auto const &r : m_routes)
+  {
+    uint16_t routeMethod = r.method;
+    uint16_t requestMethod = request.method();
+
+    bool methodMatches = (routeMethod & requestMethod) > 0;
+
+    auto pathStr = request.path().toString();
+
+    auto result = r.pattern.evaluate(pathStr);
+    if(result.matches() && methodMatches)
+    {
+      r.controller->handleRequest(request, response);
+
+      return true;
+    }
+  }
+
+  // Then, try to match any of the static file servings
+  auto path = request.path();
+  if (!path.isFile())
+  {
+    return false;
+  }
+
+  auto servPath = sitePath() + "\\static\\" + path.toString();
+  auto servFile = cmls::File(servPath);
+  auto fileExt = servFile.extension();
+  if(!servFile.exist())
+  {
+    LogNotice("File doesnt exist (%s)", servFile.fullPath().c_str());
+    return false;
+  }
+
+  auto staticFind = m_staticServes.find(fileExt);
+  if (staticFind == m_staticServes.end())
+  {
+    LogNotice("Not a static route");
+    return false;
+  }
+
+  cmls::Stream fileData;
+  if (!fileData.readFile(servFile.fullPath()))
+  {
+    LogNotice("Failed to read file (%s)", servFile.fullPath().c_str());
+    return false;
+  }
+
+  auto acceptEncoding = cmls::split(request.header("Accept-Encoding"), {','});
+  for (auto e : acceptEncoding)
+  {
+    if (cmls::trim(e) == "deflate")
+    {
+      cmls::Stream deflateStream;
+      if (fileData.compress(deflateStream))
+      {
+        fileData.swap(deflateStream);
+        response.header("Content-Encoding", "deflate");
+        LogNotice("Deflate response");
+      }
+      break;
+    }
+  }
+
+  response.header("Content-Type", staticFind->second);
+  response << fileData;
+  
+
+
   return true;
 }

@@ -173,7 +173,7 @@ std::string cmls::File::basename() const
 
 std::string cmls::File::extension() const
 {
-  return std::filesystem::path(m_path).extension().string();
+  return cmls::trimLeft(std::filesystem::path(m_path).extension().string(), {"."});
 }
 
 cmls::File &cmls::File::extension(std::string const& newExtension)

@@ -5,6 +5,10 @@
 #include "Seamless/Async.hpp"
 #include "Seamless/Error.hpp"
 
+#define WIN32_MEAN_AND_LEAN
+#include <Windows.h>
+#include <ShlObj.h>
+
 #include <map>
 
 bool cmls::CppCompiler_MSBuild::compile(CppProject const& project)
@@ -18,8 +22,22 @@ bool cmls::CppCompiler_MSBuild::compile(CppProject const& project)
   std::string projectFilename = intermediatePath + "\\" + project.targetName + ".vcxproj";
   std::string outputFilename = targetPath + "\\" + project.targetName + targetToExt.at(project.targetType);
 
+  PWSTR programFiles = NULL;
+  if (SHGetKnownFolderPath(FOLDERID_ProgramFilesX86, 0, nullptr, (PWSTR*)&programFiles) != S_OK)
+  {
+    LogError("Failed to find program files x86 folder");
+    writeOutput("Failed to find program files x86 folder");
+    return false;
+  }
+
+  auto progFiles = cmls::utf16to8(programFiles);
+
+  CoTaskMemFree(programFiles);
+
   // find msbuild
-  auto finderCmd = "vswhere.exe -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\\**\\Bin\\MSBuild.exe";
+  auto finderCmd = "\"" + progFiles + "\\Microsoft Visual Studio\\Installer\\vswhere.exe\" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\\**\\Bin\\MSBuild.exe";
+  LogNotice("Command: %s", progFiles.c_str());
+  writeOutput(cmls::formatString("Command: %s",progFiles.c_str()));
   auto finderProcess = cmls::AsyncProcess::create(finderCmd);
   finderProcess->runSynchronously();
 

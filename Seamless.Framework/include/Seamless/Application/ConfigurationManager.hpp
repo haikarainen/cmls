@@ -7,6 +7,9 @@ namespace cmls
 {
   class Application;
 
+  using ConfigurationEntryPoint = void(*)(cmls::Application *);
+
+
   class CMLS_API ConfigurationManager
   {
   public:
@@ -18,5 +21,8 @@ namespace cmls
   protected:
 
     cmls::Application* m_application = nullptr;
+
+    void *m_moduleHandle = nullptr;
+    ConfigurationEntryPoint m_entryPoint = nullptr;
   };
 }

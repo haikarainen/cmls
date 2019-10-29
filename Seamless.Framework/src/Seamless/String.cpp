@@ -2,10 +2,14 @@
 #include "Seamless/String.hpp"
 #include "Seamless/Error.hpp"
 
+#include <Windows.h>
+
 #include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <streambuf>
+#include <locale>
+#include <codecvt>
 
 bool cmls::strContains(const std::string& needle, const std::string& haystack)
 {
@@ -391,7 +395,7 @@ std::string cmls::join(std::vector<std::string> strings, std::string const &deli
   for (auto str : strings)
   {
     returner.append(str);
-    if (i++ < strings.size())
+    if (++i < strings.size())
     {
       returner.append(delimiter);
     }
@@ -449,6 +453,27 @@ bool cmls::patternMatch(std::string const& source, std::string const& patternStr
   namedParameters = result.variables();
 
   return result.matches();
+}
+
+
+std::string cmls::utf16to8(std::wstring const& wstr)
+{
+  int32_t buffSize = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int32_t)wstr.size(), NULL, 0, NULL, NULL);
+  char *buffer = new char[buffSize];
+  WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int32_t)wstr.size(), buffer, buffSize, NULL, NULL);
+  std::string returner(buffer, buffer + buffSize);
+  delete[] buffer;
+  return returner;
+}
+
+std::wstring cmls::utf8to16(std::string const& str)
+{
+  int32_t buffSize = MultiByteToWideChar(CP_UTF8, 0, str.data(), (int32_t)str.size(), NULL, 0);
+  wchar_t *buffer = new wchar_t[buffSize];
+  MultiByteToWideChar(CP_UTF8, 0, str.data(), (int32_t)str.size(), buffer, buffSize);
+  std::wstring returner(buffer, buffer + buffSize);
+  delete[] buffer;
+  return returner;
 }
 
 cmls::PatternResult::PatternResult(cmls::Pattern const& pattern, std::string const& reference)
@@ -511,9 +536,9 @@ cmls::PatternResult::PatternResult(cmls::Pattern const& pattern, std::string con
   if (buffer.size() != 0)
   {
     m_matches = false;
+
     return;
   }
-
 
   m_matches = true;
 }
@@ -600,7 +625,7 @@ cmls::Pattern::Pattern(std::string const& pattern)
   m_valid = true;
 }
 
-cmls::PatternResult cmls::Pattern::evaluate(std::string const& reference)
+cmls::PatternResult cmls::Pattern::evaluate(std::string const& reference) const
 {
   return cmls::PatternResult(*this, reference);
 }

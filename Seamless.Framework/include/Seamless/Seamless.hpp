@@ -14,3 +14,7 @@
 #include <Seamless/View/ViewParameter.hpp>
 #include <Seamless/Request.hpp>
 #include <Seamless/Response.hpp>
+#include <Seamless/Application.hpp>
+#include <Seamless/Application/Controller.hpp>
+#include <Seamless/Application/ViewManager.hpp>
+#include <Seamless/Application/ConfigurationManager.hpp>

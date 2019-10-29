@@ -115,6 +115,30 @@ bool cmls::Stream::writeFile(std::string const & filepath)
   return true;
 }
 
+// @todo test that this works
+void cmls::Stream::flush()
+{
+  if (m_data.size() == 0)
+  {
+    return;
+  }
+
+  auto cursor = m_cursor;
+
+  if (cursor >= m_data.size())
+  {
+    cursor = m_data.size() - 1;
+  }
+
+  if (cursor > 0)
+  {
+    cursor--;
+  }
+  
+
+  m_data.erase(m_data.begin(), m_data.begin() + cursor);
+}
+
 void cmls::Stream::seek(uint64_t cursor)
 {
   if (cursor > size())

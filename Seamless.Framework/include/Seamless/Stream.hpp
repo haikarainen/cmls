@@ -63,6 +63,9 @@ namespace cmls
     /** Writes stream contents to file */
     bool writeFile(std::string const & filepath);
 
+    /** Flushes data behind the cursor, leaving only unread data left in the stream. */
+    void flush();
+
     /** Returns the cursor position */
     uint64_t tell() const;
 
