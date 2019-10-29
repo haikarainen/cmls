@@ -135,9 +135,9 @@ As stated, the framework is under heavy development. As such, many features will
 | Automatic on-demand recompilation      | Done         |
 | C++ Module System                      | Done         |
 | C++ Compiler (MSBuild/Win64)           | Done         |
-| Server Module (IIS/Win64)              | In progress  |
+| Router and Controller system           | Done         |
+| Server Module (IIS/Win64)              | Done         |
 | Server Module (Apache/Linux)           | In progress  |
-| Router and Controller system           | In progress  |
 | Server Module (Nginx/Linux)            | Missing      |
 | C++ Compiler (GCC/Linux)               | Missing      |
 | C++ Compiler (Clang/Linux)             | Missing      | 
